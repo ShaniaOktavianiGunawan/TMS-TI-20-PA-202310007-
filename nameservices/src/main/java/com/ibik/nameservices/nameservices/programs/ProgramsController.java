@@ -101,26 +101,26 @@ public class ProgramsController {
     public ResponseEntity<ResponseData<Programs>> updatePrograms(@Valid @RequestBody Programs Programs,
             Errors errors) {
         ResponseData<Programs> responseData = new ResponseData<>();
-        if (errors.hasErrors()) {
-            for (ObjectError error : errors.getAllErrors()) {
-                responseData.getMessage().add(error.getDefaultMessage());
+        if (Programs.getId() != 0) {
+            if (errors.hasErrors()) {
+                for (ObjectError error : errors.getAllErrors()) {
+                    responseData.getMessage().add(error.getDefaultMessage());
+                }
+
+                responseData.setResult(false);
+                responseData.setData(null);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
 
-            responseData.setResult(false);
-            responseData.setData(null);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        }
-
-        try {
             responseData.setResult(true);
             List<Programs> value = new ArrayList<>();
-            value.add(programsServices.update(Programs));
+            value.add(programsServices.save(Programs));
             // value.add(programStudyServices.update(programStudy));
             responseData.setData(value);
 
             return ResponseEntity.ok(responseData);
-        } catch (Exception ex) {
+        } else {
             responseData.getMessage().add("Id is Required");
             responseData.setResult(false);
 

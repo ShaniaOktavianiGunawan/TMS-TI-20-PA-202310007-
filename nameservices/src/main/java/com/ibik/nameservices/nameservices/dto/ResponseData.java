@@ -32,8 +32,4 @@ public class ResponseData<T> {
         this.data = data;
     }
 
-    public void setMessage(String string) {
-
-    }
-
 }

@@ -32,14 +32,14 @@ public class ProgramsServices {
         programsRepo.deleteById(id);
     }
 
-    public Programs update(Programs programs) {
-        Programs result = findOne(programs.getId());
+    // public Programs update(Programs programs) {
+    // Programs result = findOne(programs.getId());
 
-        result.setName(programs.getName());
-        result.setDescription(programs.getDescription());
-        result.setIs_active(programs.isIs_active());
+    // result.setName(programs.getName());
+    // result.setDescription(programs.getDescription());
+    // result.setIs_active(programs.isIs_active());
 
-        return result;
-    }
+    // return result;
+    // }
 
 }

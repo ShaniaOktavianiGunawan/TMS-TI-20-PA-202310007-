@@ -60,7 +60,10 @@ public class programStudyController {
         ResponseData<programStudy> responseData = new ResponseData<>();
         try {
             responseData.setResult(true);
-            List<programStudy> value = (List<programStudy>) programStudyServices.findAll();
+            Iterable<programStudy> value = programStudyServices.findAll();
+            for (programStudy programStudy : value) {
+                System.out.println(programStudy.getName());
+            }
             responseData.setData(value);
 
             return ResponseEntity.ok(responseData);
@@ -101,26 +104,26 @@ public class programStudyController {
     public ResponseEntity<ResponseData<programStudy>> updateProgramStudy(@Valid @RequestBody programStudy programStudy,
             Errors errors) {
         ResponseData<programStudy> responseData = new ResponseData<>();
-        if (errors.hasErrors()) {
-            for (ObjectError error : errors.getAllErrors()) {
-                responseData.getMessage().add(error.getDefaultMessage());
+        if (programStudy.getId() != 0) {
+            if (errors.hasErrors()) {
+                for (ObjectError error : errors.getAllErrors()) {
+                    responseData.getMessage().add(error.getDefaultMessage());
+                }
+
+                responseData.setResult(false);
+                responseData.setData(null);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
 
-            responseData.setResult(false);
-            responseData.setData(null);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        }
-
-        try {
             responseData.setResult(true);
             List<programStudy> value = new ArrayList<>();
-            value.add(programStudyServices.update(programStudy));
+            value.add(programStudyServices.save(programStudy));
             // value.add(programStudyServices.update(programStudy));
             responseData.setData(value);
-
             return ResponseEntity.ok(responseData);
-        } catch (Exception ex) {
+
+        } else {
             responseData.getMessage().add("Id is Required");
             responseData.setResult(false);
 
