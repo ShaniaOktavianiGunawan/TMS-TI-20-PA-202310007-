@@ -31,6 +31,10 @@ public class StudentsServices {
         StudentsRepo.deleteById(id);
     }
 
+    public Iterable<Students> findByName(String name) {
+        return StudentsRepo.findStudentByName("%" + name + "%");
+    }
+
     // public Students update(Students students) {
     // Students result = findOne(students.getId());
 
