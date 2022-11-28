@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.ibik.nameservices.nameservices.dto.AuthentificationKey;
 import com.ibik.nameservices.nameservices.dto.ResponseData;
 import com.ibik.nameservices.nameservices.dto.searchData;
 
@@ -55,17 +55,17 @@ public class StudentsController {
 
     @GetMapping
     // public Iterable<Students> fetchProgram() {
-    public ResponseEntity<ResponseData<Students>> fetchStudents() {
+    public ResponseEntity<ResponseData<Students>> fetchStudents(@RequestBody String email) {
         ResponseData<Students> responseData = new ResponseData<>();
-        try {
+        if (email != null) {
             responseData.setResult(true);
             List<Students> value = (List<Students>) StudentsServices.findAll();
             responseData.setData(value);
 
             return ResponseEntity.ok(responseData);
-        } catch (Exception ex) {
+        } else {
             responseData.setResult(false);
-            responseData.getMessage().add(ex.getMessage());
+            responseData.getMessage();
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
@@ -158,6 +158,31 @@ public class StudentsController {
             return ResponseEntity.ok(responseData);
         } catch (Exception ex) {
             responseData.getMessage().add(ex.getMessage());
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<ResponseData<Students>> getStudentAuth(@RequestBody AuthentificationKey authentificationKey) {
+        ResponseData<Students> responseData = new ResponseData<>();
+
+        System.out.print(authentificationKey.getEmail());
+        System.out.print(authentificationKey.getPassword());
+
+        try {
+            Iterable<Students> values = StudentsServices.findAuth(authentificationKey.getEmail(),
+                    authentificationKey.getPassword());
+            responseData.setResult(true);
+            responseData.getMessage();
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
             responseData.setData(null);
             responseData.setResult(false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);

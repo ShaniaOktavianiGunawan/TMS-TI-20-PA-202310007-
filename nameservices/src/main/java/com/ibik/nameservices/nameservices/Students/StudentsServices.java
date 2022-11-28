@@ -35,6 +35,9 @@ public class StudentsServices {
         return StudentsRepo.findStudentByName("%" + name + "%");
     }
 
+    public Iterable<Students> findAuth(String email, String password) {
+        return StudentsRepo.findStudentAuth(email, password);
+    }
     // public Students update(Students students) {
     // Students result = findOne(students.getId());
 
